@@ -7,14 +7,15 @@ var browser_stats = {rock: 0, paper: 0, scissors: 0};
 var stats_list = ["Total Games", "Total Wins", "Total Ties", "Total Losses", "Win Loss Ratio"];
 var player_stats_ids = ["stats_player_percent_rock", "stats_player_percent_paper", "stats_player_percent_scissors"];
 var browser_stats_ids = ["stats_browser_percent_rock", "stats_browser_percent_paper", "stats_browser_percent_scissors"];
-localStorage.setItem("Total Games", 0);
-localStorage.setItem("Total Wins", 0);
-localStorage.setItem("Total Ties", 0);
-localStorage.setItem("Total Losses", 0);
-localStorage.setItem("Win Loss Ratio", 0);
+
 
 if(!player_name){
   showOrNot(name_div, true);
+  localStorage.setItem("Total Games", 0);
+  localStorage.setItem("Total Wins", 0);
+  localStorage.setItem("Total Ties", 0);
+  localStorage.setItem("Total Losses", 0);
+  localStorage.setItem("Win Loss Ratio", 0);
 }
 else{
   showOrNot(name_div, false);
