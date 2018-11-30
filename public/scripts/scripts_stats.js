@@ -7,7 +7,7 @@ document.getElementById("show_rules_button").addEventListener("click",function()
   location.href = "/rules";
 });
 document.getElementById("back_to_game_button").addEventListener("click",function(){
-  location.href = "/index";
+  location.href = "";
 });
 
 function updateNameSpan(name){
