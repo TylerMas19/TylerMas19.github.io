@@ -1,74 +1,105 @@
 var name_button=document.getElementById("name_button");
 var name_div=document.getElementById("enter_name");
-var player_name = localStorage.getItem('player_name');
 var throw_choices = ["rock", "paper", "scissors"];
-var player_stats = {rock: 0, paper: 0, scissors: 0};
-var browser_stats = {rock: 0, paper: 0, scissors: 0};
-var stats_list = ["Total Games", "Total Wins", "Total Ties", "Total Losses", "Win Loss Ratio"];
-var player_stats_ids = ["stats_player_percent_rock", "stats_player_percent_paper", "stats_player_percent_scissors"];
-var browser_stats_ids = ["stats_browser_percent_rock", "stats_browser_percent_paper", "stats_browser_percent_scissors"];
+var current_player = JSON.parse(localStorage.getItem("current_player"));
 
-
-if(!player_name){
+if(current_player==null){
   showOrNot(name_div, true);
-  localStorage.setItem("Total Games", 0);
-  localStorage.setItem("Total Wins", 0);
-  localStorage.setItem("Total Ties", 0);
-  localStorage.setItem("Total Losses", 0);
-  localStorage.setItem("Win Loss Ratio", 0);
 }
 else{
-  showOrNot(name_div, false);
-  updateNames(player_name);
+  updateNameSpan(current_player.player_name);
   showOrNot(document.getElementById("throw_choice"), true);
-  document.getElementById("select_throw_choice").value=0;
-  console.log(player_name);
+  showOrNot(document.getElementById("buttons"),true);
+}
+if(localStorage.getItem("player_Browser")==null){
+  current_opponent = new Player("Browser",false);
+  localStorage.setItem("player_Browser",JSON.stringify(current_opponent));
+}
+else{
+  current_opponent = JSON.parse(localStorage.getItem("player_Browser"));
 }
 
-makeToggleable(document.getElementById("show_rules_button"), document.getElementById("rules"));//Toggle Rules
-makeToggleable(document.getElementById("show_stats_button"), document.getElementById("stats"));//Toggle Stats
-printStats();
 throwChoice();
 
+document.getElementById("show_rules_button").addEventListener("click", function(){//Go to rules.html
+    location.href = "rules.html";
+});
+document.getElementById("show_stats_button").addEventListener("click", function(){//Go to stats.html if user selected
+  if(current_player==null){//Negative feedback if attempt to see stats without entering name
+    showOrNot(document.getElementById("feedback"),true);
+    feedback.innerHTML = "Enter your name to see your stats.";
+    feedback.classList.add("negative");
+    feedback.classList.remove("positive");
+    feedback.classList.remove("neutral");
+  }
+  else{
+    location.href = "stats.html";
+    // if(document.getElementById("stats").classList.contains("hidden")){
+    //   document.getElementById("stats").classList.remove("hidden");
+    //   document.getElementById("stats").classList.add("visible");
+    // }
+    // else{
+    //   document.getElementById("stats").classList.remove("visible");
+    //   document.getElementById("stats").classList.add("hidden");
+    // }
+  }
+});
+document.getElementById("log_out_button").addEventListener("click", function(){//Log out
+
+  localStorage.setItem("current_player",null);
+  current_player=null;
+  showOrNot(name_div,true);
+  showOrNot(document.getElementById("throw_choice"),false);
+  showOrNot(document.getElementById("buttons"),false);
+  showOrNot(document.getElementById("feedback"),false);
+  showOrNot(document.getElementById("game_results"),false);
+  document.getElementById("input_player_name").value="";
+});
+document.getElementById("name_button").addEventListener("click", function(){//Save Name
+  var input = document.getElementById("input_player_name").value;
+  showOrNot(document.getElementById("feedback"),true);
+  if (input == "") {//if nothing entered, negative feedback
+      feedback.innerHTML = "Enter your name to proceed.";
+      feedback.classList.add("negative");
+      feedback.classList.remove("positive");
+      feedback.classList.remove("neutral");
+  }
+  else{//if name entered
+    if(localStorage.getItem("player_"+input)==null){//if player is not in local storage, new player
+      current_player = new Player(input,true);
+      localStorage.setItem("player_"+input,JSON.stringify(current_player));
+    }
+    else{//if player is in local storage, retrieve data
+      current_player = JSON.parse(localStorage.getItem("player_"+input));
+    }
+    localStorage.setItem("current_player",JSON.stringify(current_player));
+    console.log("Current Player: "+current_player.player_name);
+    showOrNot(name_div,false);
+    showOrNot(document.getElementById("buttons"),true);
+    showOrNot(document.getElementById("throw_choice"),true);
+    updateNameSpan(current_player.player_name);
+    feedback.innerHTML = "Ready to play, "+current_player.player_name+"?";
+    feedback.classList.add("positive");
+    feedback.classList.remove("negative");
+    feedback.classList.remove("neutral");
+  }
+});
 document.getElementById("reset").addEventListener("click", function(){
   showOrNot(document.getElementById("feedback"), false);
   showOrNot(document.getElementById("game_results"), false);
   showOrNot(document.getElementById("throw_choice"), true);
   document.getElementById("select_throw_choice").value=0;
 });
-document.getElementById("name_button").addEventListener("click", function(){//Save Name
-  var input = document.getElementById("input_player_name").value;
-  showOrNot(document.getElementById("feedback"),true);
-  if (input == "") {
-      feedback.innerHTML = "Enter your name to proceed.";
-      feedback.classList.add("negative");
-      feedback.classList.remove("positive");
-      feedback.classList.remove("neutral");
-  }
-  else{
-    localStorage.setItem("player_name", input);
-    player_name = localStorage.getItem("player_name");
-    console.log("Player name saved as: "+player_name);
-    showOrNot(name_div,false);
-    showOrNot(document.getElementById("throw_choice"),true);
-    updateNames(player_name);
-    feedback.innerHTML = "Ready to play, "+player_name+"?";
-    feedback.classList.add("positive");
-    feedback.classList.remove("negative");
-    feedback.classList.remove("neutral");
-  }
-});
 
-function makeToggleable(button_element, div_element){
-  button_element.addEventListener("click", function(){
-    if(div_element.classList.contains("hidden")){
-      div_element.classList.remove("hidden");
-      div_element.classList.add("visible");
-    }else{
-      div_element.classList.remove("visible");
-      div_element.classList.add("hidden");
-      }
-  });
+function Player(name,good_or_bad){
+  this.player_name=name;
+  this.player_side=good_or_bad;
+  this.player_stats_list=[this.player_name+"_Total_Games", this.player_name+"_Total_Wins", this.player_name+"_Total_Ties", this.player_name+"_Total_Losses", this.player_name+"_Win_Loss_Ratio"];
+  this.player_throw_count=[this.player_name+"_percent_rock", this.player_name+"_percent_paper", this.player_name+"_percent_scissors"];
+  for(var i=0; i<this.player_stats_list.length; i++){
+    this.player_stats_list[i]=0;}
+  for(var i=0; i<this.player_throw_count.length; i++){
+    this.player_throw_count[i]=0;}
 }
 function showOrNot(div_element, show){
   if(show && div_element.classList.contains("hidden")){
@@ -79,10 +110,9 @@ function showOrNot(div_element, show){
     div_element.classList.add("hidden");
     }
 }
-function updateNames(name){
+function updateNameSpan(name){
   var name_inserts=document.getElementsByClassName("player_name_span");
   for(var i=0; i<name_inserts.length; i++){
-    console.log(name_inserts[i]);
     name_inserts[i].innerHTML=name;
   }
 }
@@ -108,9 +138,10 @@ function throwChoice() {
         feedback.classList.remove("neutral");
       }
       else {
-        localStorage.setItem("Total Games", parseInt(localStorage.getItem('Total Games'))+1);
-        player_stats[throw_choices[player_choice-1]]++;
-        browser_stats[throw_choices[browser_choice-1]]++;
+        current_player.player_stats_list[0]+=1;//total games +1
+        current_opponent.player_stats_list[0]+=1;
+        current_player.player_throw_count[player_choice-1]+=1;
+        current_opponent.player_throw_count[browser_choice-1]+=1;
 
         document.getElementById("player_image").src="images/player_"+throw_choices[player_choice-1]+".png";
         document.getElementById("browser_image").src="images/browser_"+throw_choices[browser_choice-1]+".png";
@@ -121,49 +152,48 @@ function throwChoice() {
           feedback.classList.remove("negative");
           feedback.classList.remove("positive")
           winner = "Tie";
-          localStorage.setItem("Total Ties", parseInt(localStorage.getItem('Total Ties'))+1);
-        } else if ((player_choice == 1 && browser_choice == 3) || player_choice > browser_choice) {
+
+          current_player.player_stats_list[2]+=1;
+          current_opponent.player_stats_list[2]+=1;
+          current_player.player_stats_list[4]=current_player.player_stats_list[1]/(current_player.player_stats_list[0]-current_player.player_stats_list[2]).toFixed(2);
+          current_opponent.player_stats_list[4]=current_opponent.player_stats_list[1]/(current_opponent.player_stats_list[0]-current_opponent.player_stats_list[2]).toFixed(2);
+        }
+        else if ((player_choice == 1 && browser_choice == 3) || player_choice > browser_choice) {
           feedback.innerHTML = "You Won!";
           feedback.classList.add("positive");
           feedback.classList.remove("negative");
           feedback.classList.remove("neutral");
-          winner = player_name;
-          localStorage.setItem("Total Wins", parseInt(localStorage.getItem('Total Wins'))+1);
-          localStorage.setItem("Win Loss Ratio", parseFloat(localStorage.getItem('Total Wins')/(localStorage.getItem('Total Games')-localStorage.getItem('Total Ties'))).toFixed(2));
-        } else {
+          winner = current_player.player_name;
+
+          current_player.player_stats_list[1]+=1;
+          current_opponent.player_stats_list[3]+=1;
+          current_player.player_stats_list[4]=current_player.player_stats_list[1]/(current_player.player_stats_list[0]-current_player.player_stats_list[2]).toFixed(2);
+          current_opponent.player_stats_list[4]=current_opponent.player_stats_list[1]/(current_opponent.player_stats_list[0]-current_opponent.player_stats_list[2]).toFixed(2);
+        }
+        else {
           feedback.innerHTML = "You Lost!";
           feedback.classList.add("negative");
           feedback.classList.remove("positive");
           feedback.classList.remove("neutral");
           winner = "Browser";
-          localStorage.setItem("Total Losses", parseInt(localStorage.getItem('Total Losses'))+1);
-          localStorage.setItem("Win Loss Ratio", parseFloat(localStorage.getItem('Total Wins')/localStorage.getItem('Total Losses')).toFixed(2));
+
+          current_player.player_stats_list[3]+=1;
+          current_opponent.player_stats_list[1]+=1;
+          current_player.player_stats_list[4]=current_player.player_stats_list[1]/(current_player.player_stats_list[0]-current_player.player_stats_list[2]).toFixed(2);
+          current_opponent.player_stats_list[4]=current_opponent.player_stats_list[1]/(current_opponent.player_stats_list[0]-current_opponent.player_stats_list[2]).toFixed(2);
         }
+
         showOrNot(document.getElementById("game_results"), true);
-
-
         if(winner=="Tie"){
           results_text.innerHTML = "You and Browser tied!"}
         else{
           results_text.innerHTML = "The winner is "+winner+"!";}
-
         player_text.innerHTML = "You threw "+throw_choices[player_choice-1]+ "!";
         browser_text.innerHTML = "Browser threw "+throw_choices[browser_choice-1]+ "!";
-        printStats();
-        console.log(player_stats);
+
+        localStorage.setItem("current_player",JSON.stringify(current_player));
+        localStorage.setItem("player_"+current_player.player_name,JSON.stringify(current_player));
+        localStorage.setItem("player_"+current_opponent.player_name,JSON.stringify(current_opponent));
       }
   });
-}
-function printStats() {
-  stats_list.forEach(function(id){
-    document.getElementById(id.toString()).innerHTML = localStorage.getItem(id.toString());
-  });
-
-  var total_games = localStorage.getItem("Total Games");
-  document.getElementById(player_stats_ids[0].toString()).innerHTML = (100*(player_stats.rock/total_games)).toFixed(2)+"%";
-  document.getElementById(player_stats_ids[1].toString()).innerHTML = (100*(player_stats.paper/total_games)).toFixed(2)+"%";
-  document.getElementById(player_stats_ids[2].toString()).innerHTML = (100*(player_stats.scissors/total_games)).toFixed(2)+"%";
-  document.getElementById(browser_stats_ids[0].toString()).innerHTML = (100*(browser_stats.rock/total_games)).toFixed(2)+"%";
-  document.getElementById(browser_stats_ids[1].toString()).innerHTML = (100*(browser_stats.paper/total_games)).toFixed(2)+"%";
-  document.getElementById(browser_stats_ids[2].toString()).innerHTML = (100*(browser_stats.scissors/total_games)).toFixed(2)+"%";
 }

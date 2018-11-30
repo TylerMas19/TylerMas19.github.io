@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Rock, Paper, Scissors - Client</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+
+<body>
+  <div id="header">
+    <h1>Rock, Paper, Scissors <img src="images/rpsLogo.jpg" alt="RPS Logo" height="50" width="50"></h1>
+  </div>
+  <div id="stats">
+    <h2><span class="player_name_span"></span>'s Game Stats</h2>
+    <table>
+      <tr>
+        <td>Games Played</td>
+        <td class="data" id="Total Games"></td>
+      </tr>
+      <tr>
+        <td>Wins</td>
+        <td class="data" id="Total Wins"></td>
+      </tr>
+      <tr>
+        <td>Ties</td>
+        <td class="data" id="Total Ties"></td>
+      </tr>
+      <tr>
+        <td>Losses</td>
+        <td class="data" id="Total Losses"></td>
+      </tr>
+      <tr>
+        <td>Win/Loss Ratio</td>
+        <td class="data" id="Win Loss Ratio"></td>
+      </tr>
+    </table>
+    <h2><span class="player_name_span"></span>'s Throw Stats</h2>
+    <table>
+      <tr>
+        <td>Player Rock %</td>
+        <td class="data" id="stats_player_percent_rock"></td>
+      </tr>
+      <tr>
+        <td>Player Paper %</td>
+        <td class="data" id="stats_player_percent_paper"></td>
+      </tr>
+      <tr>
+        <td>Player Scissors %</td>
+        <td class="data" id="stats_player_percent_scissors"></td>
+      </tr>
+    </table>
+    <h2>Browser's Game Stats</h2>
+    <table>
+      <tr>
+        <td>Games Played</td>
+        <td class="data" id="Opponent Total Games"></td>
+      </tr>
+      <tr>
+        <td>Wins</td>
+        <td class="data" id="Opponent Total Wins"></td>
+      </tr>
+      <tr>
+        <td>Ties</td>
+        <td class="data" id="Opponent Total Ties"></td>
+      </tr>
+      <tr>
+        <td>Losses</td>
+        <td class="data" id="Opponent Total Losses"></td>
+      </tr>
+      <tr>
+        <td>Win/Loss Ratio</td>
+        <td class="data" id="Opponent Win Loss Ratio"></td>
+      </tr>
+    </table>
+    <table>
+    <h2>Browser's Throw Stats</h2>
+    <table>
+      <tr>
+        <td>Browser Rock %</td>
+        <td class="data" id="stats_browser_percent_rock"></td>
+      </tr>
+      <tr>
+        <td>Browser Paper %</td>
+        <td class="data" id="stats_browser_percent_paper"></td>
+      </tr>
+      <tr>
+        <td>Browser Scissors %</td>
+        <td class="data" id="stats_browser_percent_scissors"></td>
+      </tr>
+    </table>
+  </div>
+  <div id="buttons">
+    <button id = "back_to_game_button">Back to Game</button>
+    <button id = "show_rules_button">Rules</button>
+  </div>
+  <footer>
+    Tyler Masuyama - November 2018
+  </footer>
+  <script src="scripts_stats.js"></script>
+</body>
