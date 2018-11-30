@@ -22,7 +22,7 @@ else{
 throwChoice();
 
 document.getElementById("show_rules_button").addEventListener("click", function(){//Go to rules.html
-    location.href = "/rules.html";
+    location.href = "/rules";
 });
 document.getElementById("show_stats_button").addEventListener("click", function(){//Go to stats.html if user selected
   if(current_player==null){//Negative feedback if attempt to see stats without entering name
@@ -33,7 +33,7 @@ document.getElementById("show_stats_button").addEventListener("click", function(
     feedback.classList.remove("neutral");
   }
   else{
-    location.href = "stats.html";
+    location.href = "/stats";
     // if(document.getElementById("stats").classList.contains("hidden")){
     //   document.getElementById("stats").classList.remove("hidden");
     //   document.getElementById("stats").classList.add("visible");
