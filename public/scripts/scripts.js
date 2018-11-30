@@ -143,8 +143,8 @@ function throwChoice() {
         current_player.player_throw_count[player_choice-1]+=1;
         current_opponent.player_throw_count[browser_choice-1]+=1;
 
-        document.getElementById("player_image").src="public/images/player_"+throw_choices[player_choice-1]+".png";
-        document.getElementById("browser_image").src="public/images/browser_"+throw_choices[browser_choice-1]+".png";
+        document.getElementById("player_image").src="images/player_"+throw_choices[player_choice-1]+".png";
+        document.getElementById("browser_image").src="images/browser_"+throw_choices[browser_choice-1]+".png";
 
         if (player_choice == browser_choice) {
           feedback.innerHTML = "You and Browser Tied";

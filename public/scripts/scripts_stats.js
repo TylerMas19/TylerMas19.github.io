@@ -4,10 +4,10 @@ var current_opponent = JSON.parse(localStorage.getItem("player_Browser"));
 updateNameSpan(current_player.player_name);
 printStats();
 document.getElementById("show_rules_button").addEventListener("click",function(){
-  location.href = "rules.html";
+  location.href = "/rules";
 });
 document.getElementById("back_to_game_button").addEventListener("click",function(){
-  location.href = "index.html";
+  location.href = "/index";
 });
 
 function updateNameSpan(name){
