@@ -22,7 +22,7 @@ else{
 throwChoice();
 
 document.getElementById("show_rules_button").addEventListener("click", function(){//Go to rules.html
-    location.href = "rules.html";
+    location.href = "/rules.html";
 });
 document.getElementById("show_stats_button").addEventListener("click", function(){//Go to stats.html if user selected
   if(current_player==null){//Negative feedback if attempt to see stats without entering name
